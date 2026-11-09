@@ -58,7 +58,7 @@
 - [ ] Data import from Excel/CSV
 - [ ] Export all tenant data to Excel
 - [ ] Error monitoring hook (Sentry, DSN via env)
-- [ ] README: setup, env vars, deploy steps
+- [x] README: setup, env vars, deploy steps
 
 ## Q: Quality and security baseline (do these inside M0 and M1, not after)
 
