@@ -2,40 +2,41 @@
 
 ## M0: Foundation (shared pattern for all Galmee products)
 
-- [ ] Next.js App Router + TS + Tailwind + shadcn/ui scaffold; `npm run build` passes
-- [ ] PWA manifest, icons, offline shell; installs from Android Chrome
-- [ ] Supabase client (`@supabase/ssr`) with `.env.example` values; middleware session refresh
-- [ ] Auth: sign up, log in, log out; after first signup call `create_tenant` (vertical `driving`)
-- [ ] next-intl with `am`, `om`, `en`; language switcher; Ethiopic-friendly font (Noto Sans Ethiopic)
-- [ ] Ethiopian calendar date display helper + tests
-- [ ] App shell: bottom navigation on mobile, sidebar on desktop, tenant name and logo
+- [x] Next.js App Router + TS + Tailwind + shadcn/ui scaffold; `npm run build` passes
+- [x] PWA manifest, icons, offline shell; installs from Android Chrome
+- [x] Supabase client (`@supabase/ssr`) with `.env.example` values; middleware session refresh
+- [x] Auth: sign up, log in, log out; after first signup call `create_tenant` (vertical `driving`)
+- [x] next-intl with `am`, `om`, `en`; language switcher; Ethiopic-friendly font (Noto Sans Ethiopic)
+- [x] Ethiopian calendar date display helper + tests
+- [x] App shell: bottom navigation on mobile, sidebar on desktop, tenant name and logo
 - [ ] Staff management (owner only): invite staff, set role
 - [ ] Generated Supabase TypeScript types committed
 
 ## M1: Core screens
 
-- [ ] Customers: list, search by name/phone, detail with balance
-- [ ] Items and stock (if this product uses stock): list, add, receive stock
-- [ ] Payments and credit: record payment, credit statement
+- [x] Customers: list, search by name/phone, detail with balance
+- [x] Items and stock: not used by this product (a driving school sells courses, not stock)
+- [x] Payments and credit: record payment, credit statement
 - [ ] Reports: today / this week / this Ethiopian month; export CSV
 - [ ] Offline queue for the main money action with sync status indicator
 
 ## M2: Galmee Driving School features
 
-- [ ] Student registration with documents
-- [ ] Course packages
-- [ ] Lesson schedule per instructor and vehicle
-- [ ] Attendance
-- [ ] Installment payments
-- [ ] Exam date tracking
-- [ ] Migration: dr_courses
-- [ ] Migration: dr_enrollments
-- [ ] Migration: dr_instructors
-- [ ] Migration: dr_lessons
-- [ ] Migration: dr_installments
-- [ ] Migration: dr_exams
-- [ ] Remaining balance per student
-- [ ] Lessons use core `bookings` so an instructor or vehicle cannot be double-booked
+- [x] Student registration with document checklist
+- [ ] Upload scanned student documents (Supabase Storage)
+- [x] Course packages
+- [x] Lesson schedule per instructor and vehicle
+- [x] Attendance
+- [x] Installment payments
+- [x] Exam date tracking
+- [x] Migration: dr_courses
+- [x] Migration: dr_enrollments
+- [x] Migration: dr_instructors
+- [x] Migration: dr_lessons
+- [x] Migration: dr_installments
+- [x] Migration: dr_exams
+- [x] Remaining balance per student
+- [x] Lessons use core `bookings` so an instructor or vehicle cannot be double-booked
 
 ## M3: Notifications
 
@@ -61,11 +62,11 @@
 
 ## Q: Quality and security baseline (do these inside M0 and M1, not after)
 
-- [ ] `docs/DESIGN.md` written per the frontend guidelines (palette, type with Ethiopic support, layout wireframes, reviewed against generic defaults)
-- [ ] Tailwind theme tokens and `next/font` fonts from DESIGN.md
-- [ ] `server-only` Data Access Layer in `src/server/dal/`; every Server Action validates with zod and re-checks auth + role
-- [ ] Security headers and CSP with nonce (the security guidelines section 5)
-- [ ] Cross-tenant RLS test extended to this product's tables and passing
-- [ ] Playwright screenshot script for 360 px and 1280 px
-- [ ] `npm audit` clean, Dependabot active
+- [x] `docs/DESIGN.md` written per the frontend guidelines (palette, type with Ethiopic support, layout wireframes, reviewed against generic defaults)
+- [x] Tailwind theme tokens and `next/font` fonts from DESIGN.md
+- [x] `server-only` Data Access Layer in `src/server/dal/`; every Server Action validates with zod and re-checks auth + role
+- [x] Security headers and CSP with nonce (the security guidelines section 5)
+- [x] Cross-tenant RLS test extended to this product's tables and passing
+- [x] Playwright screenshot script for 360 px and 1280 px
+- [x] `npm audit` clean, Dependabot active
 - [ ] Self-audit (the security guidelines section 9) recorded in the dev log
