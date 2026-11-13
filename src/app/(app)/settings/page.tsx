@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { addCourseAction, addInstructorAction, addVehicleAction, toggleCourseAction, toggleInstructorAction, toggleVehicleAction, type ActionState } from "@/actions/driving";
 import { ActionForm } from "@/components/driving/action-form";
+import { BirrInput } from "@/components/galmee/birr-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Locale } from "@/i18n/config";
@@ -42,10 +43,11 @@ export default async function SettingsPage() {
   const { profile } = await getSession();
   if (profile.role === "staff") redirect("/");
   const [t, locale, courses, instructors, vehicles] = await Promise.all([getTranslations("settings"), getLocale() as Promise<Locale>, listCourses(), listInstructors(), listVehicles()]);
+  const birr = (await getTranslations("common"))("birr");
   const labels = { on: t("activate"), off: t("deactivate"), inactive: t("inactive") };
   return (
     <div className="grid max-w-2xl gap-8">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-[1.5625rem] leading-tight font-bold">{t("title")}</h1>
 
       <section className="grid gap-3">
         <h2 className="text-lg font-semibold">{t("courses")}</h2>
@@ -60,7 +62,10 @@ export default async function SettingsPage() {
           <Field name="licenceClass" label={t("licenceClass")} />
           <Field name="lessonsTotal" label={t("lessonsTotal")} type="number" inputMode="numeric" required defaultValue="25" />
           <Field name="lessonMinutes" label={t("lessonMinutes")} type="number" inputMode="numeric" required defaultValue="60" />
-          <Field name="fee" label={t("fee")} inputMode="decimal" required />
+          <div className="grid gap-2">
+            <Label htmlFor="fee">{t("fee")}</Label>
+            <BirrInput id="fee" name="fee" required unitLabel={birr} />
+          </div>
         </ActionForm>
       </section>
 

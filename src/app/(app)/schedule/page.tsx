@@ -36,7 +36,7 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="grid max-w-2xl gap-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-[1.5625rem] leading-tight font-bold">{t("title")}</h1>
       <div className="flex items-center justify-between gap-2">
         <Link href={link(addDays(day, -1))} aria-label={t("previous")} className={cn(buttonVariants({ variant: "outline", size: "icon" }))}>
           <ChevronLeft aria-hidden />

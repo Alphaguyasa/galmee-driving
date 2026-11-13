@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { LogOut } from "lucide-react";
 import { logout } from "@/actions/auth";
 import { AppNav } from "@/components/app-nav";
+import { OfflineBanner } from "@/components/galmee/offline-banner";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -78,10 +79,13 @@ export async function AppShell({ tenantName, logoUrl, userName, roleLabel, canMa
             </form>
           </div>
         </header>
+        <OfflineBanner label={tCommon("offline")} className="print:hidden" />
         <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 pt-4 pb-24 md:p-8 print:m-0 print:p-0">{children}</main>
       </div>
 
-      <AppNav variant="bottom" canManage={canManage} />
+      <div className="print:hidden">
+        <AppNav variant="bottom" canManage={canManage} />
+      </div>
     </div>
   );
 }

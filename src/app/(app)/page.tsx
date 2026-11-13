@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
-import { CalendarClock, GraduationCap, Plus, Search } from "lucide-react";
+import { CalendarClock, GraduationCap, Plus, Search, UsersRound } from "lucide-react";
 import { loadDemoDataAction } from "@/actions/driving";
 import { ActionForm } from "@/components/driving/action-form";
 import { RoadLine } from "@/components/driving/road-line";
+import { EmptyState } from "@/components/galmee/empty-state";
+import { ListRow, ListSheet } from "@/components/galmee/list-row";
 import { buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import type { Locale } from "@/i18n/config";
@@ -69,54 +71,65 @@ export default async function StudentBoard({ searchParams }: { searchParams: Pro
       </nav>
 
       {students.length === 0 ? (
-        <div className="grid gap-3">
-          <p className="text-muted-foreground">{query ? t("noMatch") : t(`empty.${filter}`)}</p>
-          {!query && filter === "all" && tenant.name === DEMO_TENANT ? (
-            <ActionForm action={loadDemoDataAction} submitLabel={t("loadDemo")} variant="outline" />
-          ) : null}
-        </div>
+        <EmptyState
+          icon={UsersRound}
+          message={query ? t("noMatch") : t(`empty.${filter}`)}
+          action={
+            !query && filter === "all" && tenant.name === DEMO_TENANT ? (
+              <ActionForm action={loadDemoDataAction} submitLabel={t("loadDemo")} variant="outline" />
+            ) : undefined
+          }
+        />
       ) : (
-        <ul aria-live="polite">
+        <ListSheet aria-live="polite">
           {students.map((s) => (
-            <li key={s.id}>
-              <Link href={`/students/${s.id}`} className="grid gap-1.5 border-b py-3 hover:bg-accent/40">
+            <ListRow
+              key={s.id}
+              href={`/students/${s.id}`}
+              title={
                 <span className="flex items-baseline justify-between gap-3">
-                  <span className="min-w-0 truncate font-semibold">{s.student_name}</span>
-                  <span className="num shrink-0 text-sm" aria-hidden>
-                    {s.lessons_attended}/{s.lessons_total}
+                  <span className="min-w-0 break-words">{s.student_name}</span>
+                  <span className="shrink-0 text-right">
+                    {s.balance > 0 ? (
+                      <span className={cn("num text-sm font-semibold", s.overdue > 0 ? "text-owed" : "text-foreground")}>
+                        {t(s.overdue > 0 ? "overdue" : "owes", { amount: formatBirr(s.overdue > 0 ? s.overdue : s.balance, locale) })}
+                      </span>
+                    ) : (
+                      <span className="text-sm text-money-in">{t("paidUp")}</span>
+                    )}
                   </span>
                 </span>
-                <RoadLine done={s.lessons_attended} total={s.lessons_total} label={t("lessonsDone", { done: s.lessons_attended, total: s.lessons_total })} />
-                <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
-                  <span className="text-muted-foreground">{s.status === "completed" ? t("completed") : s.course_name}</span>
-                  {s.balance > 0 ? (
-                    <span className={cn("num font-semibold", s.overdue > 0 && "text-destructive")}>
-                      {t(s.overdue > 0 ? "overdue" : "owes", { amount: formatBirr(s.overdue > 0 ? s.overdue : s.balance, locale) })}
+              }
+              sub={
+                <>
+                  <RoadLine done={s.lessons_attended} total={s.lessons_total} label={t("lessonsDone", { done: s.lessons_attended, total: s.lessons_total })} />
+                  <span className="flex items-baseline justify-between gap-3">
+                    <span className="min-w-0 truncate">{s.status === "completed" ? t("completed") : s.course_name}</span>
+                    <span className="num shrink-0" aria-hidden>
+                      {s.lessons_attended}/{s.lessons_total}
                     </span>
-                  ) : (
-                    <span className="text-muted-foreground">{t("paidUp")}</span>
-                  )}
-                </span>
-                {s.next_lesson_at || s.next_exam_on ? (
-                  <span className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                    {s.next_lesson_at ? (
-                      <span className="num inline-flex items-center gap-1 text-muted-foreground">
-                        <CalendarClock aria-hidden className="size-4" />
-                        {t("nextLesson", { date: formatEthiopianDate(addisDay(s.next_lesson_at), locale, { withEra: false }), time: addisTime(s.next_lesson_at) })}
-                      </span>
-                    ) : null}
-                    {s.next_exam_on ? (
-                      <span className="inline-flex items-center gap-1 font-medium text-exam">
-                        <GraduationCap aria-hidden className="size-4" />
-                        {t("nextExam", { date: formatEthiopianDate(s.next_exam_on, locale, { withEra: false }) })}
-                      </span>
-                    ) : null}
                   </span>
-                ) : null}
-              </Link>
-            </li>
+                  {s.next_lesson_at || s.next_exam_on ? (
+                    <span className="flex flex-wrap gap-x-4 gap-y-1">
+                      {s.next_lesson_at ? (
+                        <span className="num inline-flex items-center gap-1">
+                          <CalendarClock aria-hidden className="size-4" />
+                          {t("nextLesson", { date: formatEthiopianDate(addisDay(s.next_lesson_at), locale, { withEra: false }), time: addisTime(s.next_lesson_at) })}
+                        </span>
+                      ) : null}
+                      {s.next_exam_on ? (
+                        <span className="inline-flex items-center gap-1 font-medium text-exam">
+                          <GraduationCap aria-hidden className="size-4" />
+                          {t("nextExam", { date: formatEthiopianDate(s.next_exam_on, locale, { withEra: false }) })}
+                        </span>
+                      ) : null}
+                    </span>
+                  ) : null}
+                </>
+              }
+            />
           ))}
-        </ul>
+        </ListSheet>
       )}
 
       <div className="sticky bottom-20 md:bottom-4">

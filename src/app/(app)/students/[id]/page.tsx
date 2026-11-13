@@ -7,6 +7,8 @@ import { ClientRef } from "@/components/driving/client-ref";
 import { DateField, SelectField } from "@/components/driving/fields";
 import { LessonRow } from "@/components/driving/lesson-row";
 import { RoadLine } from "@/components/driving/road-line";
+import { MoneySummaryCard } from "@/components/galmee/money-summary-card";
+import { BirrInput } from "@/components/galmee/birr-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Locale } from "@/i18n/config";
@@ -43,6 +45,7 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
   const { student: s, lessons, installments, payments, exams, documents } = card;
   const today = addisDay();
   const money = (n: number) => formatBirr(n, locale);
+  const birr = (await getTranslations("common"))("birr");
   const date = (d: string) => formatEthiopianDate(d, locale, { withEra: false });
   const active = s.status === "active";
   // eslint-disable-next-line react-hooks/purity -- a server component renders once per request; attendance buttons depend on the current time
@@ -51,27 +54,23 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
   return (
     <div className="grid max-w-2xl gap-6">
       <header className="grid gap-2">
-        <h1 className="text-2xl font-bold">{s.student_name}</h1>
+        <h1 className="text-[1.5625rem] leading-tight font-bold">{s.student_name}</h1>
         <p className="text-muted-foreground">
           {[s.course_name, s.student_phone, card.nationalId].filter(Boolean).join(" · ")}
         </p>
         <RoadLine done={s.lessons_attended} total={s.lessons_total} label={t("lessonsDone", { done: s.lessons_attended, total: s.lessons_total })} />
-        <dl className="grid grid-cols-3 gap-2 text-sm">
-          <div>
-            <dt className="text-muted-foreground">{t("lessons")}</dt>
-            <dd className="num text-lg font-semibold">
-              {s.lessons_attended}/{s.lessons_total}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">{t("paid")}</dt>
-            <dd className="num text-lg font-semibold">{money(s.paid_total)}</dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">{t("balance")}</dt>
-            <dd className={cn("num text-lg font-semibold", s.balance > 0 && "text-destructive")}>{money(s.balance)}</dd>
-          </div>
-        </dl>
+        <p className="text-sm">
+          <span className="text-muted-foreground">{t("lessons")}</span>{" "}
+          <span className="num font-semibold">
+            {s.lessons_attended}/{s.lessons_total}
+          </span>
+        </p>
+        <MoneySummaryCard
+          label={t("balance")}
+          figure={money(s.balance)}
+          sub={`${t("paid")}: ${money(s.paid_total)}`}
+          tone={s.balance > 0 ? "owed" : "in"}
+        />
         {s.status === "completed" ? <p className="font-medium">{t("completed")}</p> : null}
       </header>
 
@@ -98,7 +97,7 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
             <input type="hidden" name="enrollment" value={s.id} />
             <div className="grid gap-2">
               <Label htmlFor="amount">{t("amount")}</Label>
-              <Input id="amount" name="amount" inputMode="decimal" required autoComplete="off" />
+              <BirrInput id="amount" name="amount" required unitLabel={birr} />
             </div>
             <SelectField name="method" label={t("method")} defaultValue="cash" options={PAY_METHODS.map((m) => ({ value: m, label: tMethods(m) }))} />
             <div className="grid gap-2">

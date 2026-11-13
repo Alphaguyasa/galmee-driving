@@ -1,5 +1,12 @@
 # DESIGN.md: Galmee Driving School
 
+> The driving school uses the **Galmee design system**. Tokens live in `src/app/globals.css`
+> (only `--trade`, asphalt `#1E2226`, plus the lane line's `--lane` yellow are
+> driving-specific; `--l-red` and `--sign-blue` now map to the shared owed and sync
+> colours), shared components in `src/components/galmee/`. Type is now Atkinson
+> Hyperlegible Next with Noto Sans Ethiopic. The colour and type tables below are
+> superseded by the system; the brief, the road line and the screen wireframes still hold.
+
 Change this file first, then the code.
 
 ## Brief

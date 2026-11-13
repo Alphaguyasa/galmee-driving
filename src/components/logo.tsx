@@ -1,16 +1,6 @@
-import { cn } from "@/lib/utils";
+import { GalmeeMark } from "@/components/galmee/brand";
 
-/** The learner plate: a red L on white. */
-export function Logo({ className }: { className?: string; inverse?: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "inline-flex size-8 items-center justify-center rounded-sm border-2 border-[var(--l-red)] bg-white text-lg leading-none font-bold text-[var(--l-red)]",
-        className,
-      )}
-    >
-      L
-    </span>
-  );
+/** The app logo tile: the shared Galmee mark on this app's trade colour. */
+export function Logo({ className, inverse = false }: { className?: string; inverse?: boolean }) {
+  return <GalmeeMark className={className} inverse={inverse} />;
 }

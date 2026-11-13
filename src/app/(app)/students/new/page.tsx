@@ -5,6 +5,7 @@ import { ActionForm } from "@/components/driving/action-form";
 import { ClientRef } from "@/components/driving/client-ref";
 import { DateField, SelectField } from "@/components/driving/fields";
 import { buttonVariants } from "@/components/ui/button";
+import { BirrInput } from "@/components/galmee/birr-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Locale } from "@/i18n/config";
@@ -22,12 +23,13 @@ export default async function NewStudentPage() {
     listCourses(),
   ]);
   const active = courses.filter((c) => c.active);
+  const birr = (await getTranslations("common"))("birr");
   const today = addisDay();
 
   if (active.length === 0) {
     return (
       <div className="grid gap-3">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-[1.5625rem] leading-tight font-bold">{t("title")}</h1>
         <p className="text-muted-foreground">{t("noCourses")}</p>
         <Link href="/settings" className={buttonVariants({ size: "lg" })}>
           {t("addCourse")}
@@ -38,7 +40,7 @@ export default async function NewStudentPage() {
 
   return (
     <div className="grid max-w-xl gap-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-[1.5625rem] leading-tight font-bold">{t("title")}</h1>
       <ActionForm action={enrollAction} submitLabel={t("submit")} className="grid gap-4">
         <ClientRef />
         <div className="grid gap-2">
@@ -72,7 +74,7 @@ export default async function NewStudentPage() {
 
         <div className="grid gap-2">
           <Label htmlFor="down">{t("down")}</Label>
-          <Input id="down" name="down" inputMode="decimal" autoComplete="off" placeholder="0" />
+          <BirrInput id="down" name="down" placeholder="0" unitLabel={birr} />
         </div>
         <SelectField name="method" label={t("method")} defaultValue="cash" options={PAY_METHODS.map((m) => ({ value: m, label: tMethods(m) }))} />
         <div className="grid gap-2">
