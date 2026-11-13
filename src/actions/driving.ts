@@ -109,6 +109,8 @@ export async function documentAction(_prev: ActionState, formData: FormData): Pr
   await requireLogin();
   const parsed = documentSchema.safeParse(formToObject(formData, ["enrollment", "kind", "received"]));
   if (!parsed.success) return { error: "form" };
+  // Staff may mark a document received; only owners and managers may remove one.
+  if (parsed.data.received !== "true" && !(await requireManager())) return { error: "not_allowed" };
   const result = await driving.setDocument(parsed.data.enrollment, parsed.data.kind, parsed.data.received === "true");
   if (!result.ok) return { error: result.error };
   revalidatePath(`/students/${parsed.data.enrollment}`);

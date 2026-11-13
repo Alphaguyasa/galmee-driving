@@ -17,6 +17,7 @@ import { formatEthiopianDate } from "@/lib/ethiopian-date";
 import { formatBirr } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { getStudent, listInstructors, listVehicles } from "@/server/dal/driving";
+import { getSession } from "@/server/dal/session";
 import { DOCUMENT_KINDS, EXAM_KINDS, PAY_METHODS, uuidParam } from "@/server/validation";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -42,6 +43,7 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
     listVehicles(),
   ]);
   if (!card) notFound();
+  const canRemoveDocuments = (await getSession()).profile.role !== "staff";
   const { student: s, lessons, installments, payments, exams, documents } = card;
   const today = addisDay();
   const money = (n: number) => formatBirr(n, locale);
@@ -206,11 +208,13 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
                   {tDocs(kind)}
                   <span className="sr-only">{has ? t("docReceived") : t("docMissing")}</span>
                 </span>
-                <ActionForm action={documentAction} submitLabel={has ? t("docRemove") : t("docMark")} size="sm" variant="outline" className="contents">
-                  <input type="hidden" name="enrollment" value={s.id} />
-                  <input type="hidden" name="kind" value={kind} />
-                  <input type="hidden" name="received" value={has ? "false" : "true"} />
-                </ActionForm>
+                {has && !canRemoveDocuments ? null : (
+                  <ActionForm action={documentAction} submitLabel={has ? t("docRemove") : t("docMark")} size="sm" variant="outline" className="contents">
+                    <input type="hidden" name="enrollment" value={s.id} />
+                    <input type="hidden" name="kind" value={kind} />
+                    <input type="hidden" name="received" value={has ? "false" : "true"} />
+                  </ActionForm>
+                )}
               </li>
             );
           })}
