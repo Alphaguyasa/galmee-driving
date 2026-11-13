@@ -23,7 +23,7 @@
 ## M2: Galmee Driving School features
 
 - [x] Student registration with document checklist
-- [ ] Upload scanned student documents (Supabase Storage)
+- [ ] Upload scanned student documents (Supabase Storage): one bucket and a list per student, nothing more (built in M-next)
 - [x] Course packages
 - [x] Lesson schedule per instructor and vehicle
 - [x] Attendance
@@ -37,6 +37,23 @@
 - [x] Migration: dr_exams
 - [x] Remaining balance per student
 - [x] Lessons use core `bookings` so an instructor or vehicle cannot be double-booked
+
+## M-next: Tier 1 close-out
+
+- [ ] Installment receipt layout + print/reprint
+- [ ] Storage bucket + upload on student card (`dr_documents`)
+- [ ] Fix the `dr_documents` delete policy while touching it
+
+## M-after: Tier 2 and 3
+
+- [ ] SMS templates: lesson reminder, installment due, exam date, into the notifications queue
+- [ ] Collections + outstanding report by Ethiopian month, CSV
+- [ ] Offline queue for `dr_pay`
+- [ ] Owner Telegram: today's collections + students with lessons done but balance unpaid
+- [ ] Instructor accounts + lesson-count report
+- [ ] Pass-rate report per instructor
+
+Out of scope: vehicle maintenance tracking (that belongs to a garage system). Demo data is complete; it is not extended further.
 
 ## M3: Notifications
 
