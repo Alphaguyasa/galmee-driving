@@ -77,6 +77,14 @@ begin
   select status into s from public.dr_enrollments where id = ea; r := r || 'passed practical=' || s || ' (expect completed); ';
 
   -- Writes that must go through RPCs.
+  perform set_config('request.jwt.claims', json_build_object('sub', uc, 'role','authenticated')::text, true);
+  begin insert into public.bookings(resource_type, resource_id, starts_at, ends_at) values ('instructor', ia, t0 + interval '8 hours', t0 + interval '9 hours'); ok := true; exception when others then ok := false; end;
+  r := r || 'staff direct booking=' || ok || ' (expect false); ';
+  perform set_config('request.jwt.claims', json_build_object('sub', ua, 'role','authenticated')::text, true);
+  begin insert into public.bookings(resource_type, resource_id, starts_at, ends_at) values ('instructor', ia, t0 + interval '8 hours', t0 + interval '9 hours'); ok := true; exception when others then ok := false; end;
+  r := r || 'owner direct booking=' || ok || ' (expect false); ';
+  select count(*) into n from public.bookings where resource_id = ia and status = 'booked'; r := r || 'A instructor bookings=' || n || ' (expect 1); ';
+  perform set_config('request.jwt.claims', json_build_object('sub', uc, 'role','authenticated')::text, true);
   begin update public.dr_enrollments set paid_total = fee where id = ea; ok := true; exception when others then ok := false; err := sqlerrm; end;
   r := r || 'direct money write=' || ok || ' (expect false); ';
 
