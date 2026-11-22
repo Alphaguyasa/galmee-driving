@@ -76,6 +76,14 @@ begin
   perform public.dr_exam_result(xa, 'passed');
   select status into s from public.dr_enrollments where id = ea; r := r || 'passed practical=' || s || ' (expect completed); ';
 
+  -- Only owners and managers remove document records; staff can only add and mark them.
+  perform set_config('request.jwt.claims', json_build_object('sub', uc, 'role','authenticated')::text, true);
+  delete from public.dr_documents where enrollment_id = ea; get diagnostics n = row_count; r := r || 'staff deletes doc=' || n || ' (expect 0); ';
+  perform set_config('request.jwt.claims', json_build_object('sub', ub, 'role','authenticated')::text, true);
+  delete from public.dr_documents where enrollment_id = ea; get diagnostics n = row_count; r := r || 'B deletes A doc=' || n || ' (expect 0); ';
+  perform set_config('request.jwt.claims', json_build_object('sub', ua, 'role','authenticated')::text, true);
+  delete from public.dr_documents where enrollment_id = ea and kind = 'medical'; get diagnostics n = row_count; r := r || 'owner deletes doc=' || n || ' (expect 1); ';
+
   -- Writes that must go through RPCs.
   perform set_config('request.jwt.claims', json_build_object('sub', uc, 'role','authenticated')::text, true);
   begin insert into public.bookings(resource_type, resource_id, starts_at, ends_at) values ('instructor', ia, t0 + interval '8 hours', t0 + interval '9 hours'); ok := true; exception when others then ok := false; end;

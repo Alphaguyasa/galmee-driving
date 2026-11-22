@@ -42,7 +42,7 @@
 
 - [ ] Installment receipt layout + print/reprint
 - [ ] Storage bucket + upload on student card (`dr_documents`)
-- [ ] Fix the `dr_documents` delete policy while touching it
+- [x] Fix the `dr_documents` delete policy while touching it
 
 ## M-after: Tier 2 and 3
 
