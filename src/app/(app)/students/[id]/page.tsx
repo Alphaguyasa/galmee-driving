@@ -6,6 +6,7 @@ import { ActionForm } from "@/components/driving/action-form";
 import { ClientRef } from "@/components/driving/client-ref";
 import { DateField, SelectField } from "@/components/driving/fields";
 import { LessonRow } from "@/components/driving/lesson-row";
+import { SkillProgress } from "@/components/driving/skill-picker";
 import { RoadLine } from "@/components/driving/road-line";
 import { MoneySummaryCard } from "@/components/galmee/money-summary-card";
 import { BirrInput } from "@/components/galmee/birr-input";
@@ -122,6 +123,10 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
         ) : (
           <p className="text-sm text-muted-foreground">{t("noPayments")}</p>
         )}
+      </Section>
+
+      <Section title={t("skills")}>
+        <SkillProgress gained={card.skills.map((k) => k.skill)} />
       </Section>
 
       <Section title={t("lessons")}>

@@ -84,7 +84,9 @@
     "already_loaded": "The demo students are already loaded.",
     "name_taken": "That name is already in the list.",
     "plate_taken": "That plate is already in the list.",
-    "overpayment": "That is more than the balance."
+    "overpayment": "That is more than the balance.",
+    "lesson_not_attended": "Skills can only be ticked for an attended lesson.",
+    "bad_skill": "Unknown skill."
   },
   "board": {
     "search": "Search name or phone",
@@ -179,7 +181,8 @@
     "docReceived": "received",
     "docMissing": "not received",
     "docMark": "Received",
-    "docRemove": "Undo"
+    "docRemove": "Undo",
+    "skills": "Skills"
   },
   "lessons": {
     "status": {
@@ -247,5 +250,24 @@
     "deactivate": "Remove",
     "activate": "Bring back",
     "inactive": "Not in use"
+  },
+  "skills": {
+    "title": "Skills shown",
+    "none": "None ticked yet",
+    "save": "Save skills",
+    "saved": "Skills saved",
+    "progress": "{done} of {total} skills shown",
+    "shown": "shown",
+    "notYet": "not yet",
+    "name": {
+      "controls": "Controls",
+      "mirrors": "Mirrors",
+      "steering": "Steering",
+      "gears": "Gears",
+      "reversing": "Reversing",
+      "hill_start": "Hill start",
+      "parking": "Parking",
+      "traffic": "Traffic"
+    }
   }
 }

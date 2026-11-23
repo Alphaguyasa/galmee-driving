@@ -13,6 +13,7 @@ import {
   examResultSchema,
   formToObject,
   instructorSchema,
+  lessonSkillsSchema,
   markLessonSchema,
   paySchema,
   toggleSchema,
@@ -77,6 +78,17 @@ export async function markLessonAction(_prev: ActionState, formData: FormData): 
   const parsed = markLessonSchema.safeParse(formToObject(formData, ["lesson", "status"]));
   if (!parsed.success) return { error: "form" };
   const result = await driving.markLesson(parsed.data.lesson, parsed.data.status);
+  if (!result.ok) return { error: result.error };
+  const enrollment = formData.get("enrollment");
+  if (typeof enrollment === "string") refreshStudent(enrollment);
+  return { done: true };
+}
+
+export async function lessonSkillsAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireLogin();
+  const parsed = lessonSkillsSchema.safeParse({ lesson: formData.get("lesson"), skills: formData.getAll("skill") });
+  if (!parsed.success) return { error: "form" };
+  const result = await driving.setLessonSkills(parsed.data.lesson, parsed.data.skills);
   if (!result.ok) return { error: result.error };
   const enrollment = formData.get("enrollment");
   if (typeof enrollment === "string") refreshStudent(enrollment);

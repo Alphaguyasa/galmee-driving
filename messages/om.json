@@ -84,7 +84,9 @@
     "already_loaded": "Barattoonni agarsiisaa duraan fe'amaniiru.",
     "name_taken": "Maqaan sun tarree keessa jira.",
     "plate_taken": "Gabateen sun tarree keessa jira.",
-    "overpayment": "Kun haftee caala."
+    "overpayment": "Kun haftee caala.",
+    "lesson_not_attended": "Dandeettiin barnoota irratti argamee qofaaf filatama.",
+    "bad_skill": "Dandeettii hin beekamne."
   },
   "board": {
     "search": "Maqaa ykn bilbila barbaadi",
@@ -179,7 +181,8 @@
     "docReceived": "fudhatameera",
     "docMissing": "hin fudhatamne",
     "docMark": "Fudhadhe",
-    "docRemove": "Deebisi"
+    "docRemove": "Deebisi",
+    "skills": "Dandeettii"
   },
   "lessons": {
     "status": {
@@ -247,5 +250,24 @@
     "deactivate": "Balleessi",
     "activate": "Deebisi",
     "inactive": "Hojii irra hin jiru"
+  },
+  "skills": {
+    "title": "Dandeettii mul'atan",
+    "none": "Ammaaf homtuu hin filatamne",
+    "save": "Dandeettii olkaa'i",
+    "saved": "Dandeettiin olkaa'ame",
+    "progress": "Dandeettii {total} keessaa {done} mul'ataniiru",
+    "shown": "mul'ate",
+    "notYet": "ammallee",
+    "name": {
+      "controls": "To'annoo",
+      "mirrors": "Daawwitii",
+      "steering": "Gulufa",
+      "gears": "Marshii",
+      "reversing": "Duubatti oofuu",
+      "hill_start": "Gaara irratti ka'uu",
+      "parking": "Dhaabuu",
+      "traffic": "Tiraafika keessa oofuu"
+    }
   }
 }

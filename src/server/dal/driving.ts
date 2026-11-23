@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { drivingErrorKey } from "@/lib/driving-errors";
 import { addDays, addisInstant, addisDay } from "@/lib/addis-time";
 import type { Enums } from "@/lib/database.types";
-import type { DocumentKind } from "@/server/validation";
+import type { DocumentKind, Skill } from "@/server/validation";
+import { skillsGained, withSkills } from "@/lib/lesson-skills";
 
 export type Result<T = void> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -61,6 +62,8 @@ export type StudentCard = {
   nationalId: string | null;
   documents: DocumentKind[];
   lessons: LessonRow[];
+  /** Each skill the student has shown in an attended lesson, with the first lesson start. */
+  skills: { skill: Skill; firstAt: string }[];
   installments: { id: string; seq: number; dueOn: string; amount: number; paid: number }[];
   payments: { id: string; amount: number; method: Enums<"pay_method">; reference: string | null; createdAt: string }[];
   exams: { id: string; kind: string; examOn: string; place: string | null; result: string }[];
@@ -77,6 +80,8 @@ export type LessonRow = {
   starts_at: string;
   ends_at: string;
   status: string;
+  /** Skills ticked for this lesson; only attended lessons have any. */
+  skills: Skill[];
 };
 
 const LESSON_COLUMNS =
@@ -84,7 +89,7 @@ const LESSON_COLUMNS =
 
 export async function getStudent(id: string): Promise<StudentCard | null> {
   const supabase = await createClient();
-  const [board, enrollment, documents, lessons, installments, payments, exams] = await Promise.all([
+  const [board, enrollment, documents, lessons, installments, payments, exams, skills] = await Promise.all([
     supabase.from("dr_student_board").select(BOARD_COLUMNS).eq("id", id).maybeSingle(),
     supabase.from("dr_enrollments").select("national_id").eq("id", id).maybeSingle(),
     supabase.from("dr_documents").select("kind").eq("enrollment_id", id),
@@ -92,14 +97,17 @@ export async function getStudent(id: string): Promise<StudentCard | null> {
     supabase.from("dr_installments").select("id, seq, due_on, amount, paid").eq("enrollment_id", id).order("seq"),
     supabase.from("dr_payments").select("id, amount, method, reference, created_at").eq("enrollment_id", id).order("created_at", { ascending: false }).limit(100),
     supabase.from("dr_exams").select("id, kind, exam_on, place, result").eq("enrollment_id", id).order("exam_on", { ascending: false }),
+    supabase.from("dr_lesson_skills").select("lesson_id, skill").eq("enrollment_id", id),
   ]);
-  for (const r of [board, enrollment, documents, lessons, installments, payments, exams]) if (r.error) throw r.error;
+  for (const r of [board, enrollment, documents, lessons, installments, payments, exams, skills]) if (r.error) throw r.error;
+  const lessonRows = withSkills((lessons.data ?? []) as Omit<LessonRow, "skills">[], skills.data ?? []);
   if (!board.data) return null;
   return {
     student: board.data as StudentRow,
     nationalId: enrollment.data?.national_id ?? null,
     documents: (documents.data ?? []).map((d) => d.kind as DocumentKind),
-    lessons: (lessons.data ?? []) as LessonRow[],
+    lessons: lessonRows,
+    skills: skillsGained(lessonRows),
     installments: (installments.data ?? []).map((i) => ({ id: i.id, seq: i.seq, dueOn: i.due_on, amount: i.amount, paid: i.paid })),
     payments: (payments.data ?? []).map((p) => ({
       id: p.id, amount: p.amount, method: p.method as Enums<"pay_method">, reference: p.reference, createdAt: p.created_at,
@@ -122,7 +130,18 @@ export async function listLessonsForDay(day: string, instructor?: string, vehicl
   if (vehicle) q = q.eq("vehicle_id", vehicle);
   const { data, error } = await q;
   if (error) throw error;
-  return data as LessonRow[];
+  const rows = data as Omit<LessonRow, "skills">[];
+  const attended = rows.filter((l) => l.status === "attended").map((l) => l.id);
+  if (attended.length === 0) return withSkills(rows, []);
+  const skills = await supabase.from("dr_lesson_skills").select("lesson_id, skill").in("lesson_id", attended);
+  if (skills.error) throw skills.error;
+  return withSkills(rows, skills.data);
+}
+
+export async function setLessonSkills(lesson: string, skills: Skill[]): Promise<Result<Skill[]>> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("dr_set_lesson_skills", { p_lesson: lesson, p_skills: skills });
+  return error ? fail(error) : { ok: true, data: (data ?? []) as Skill[] };
 }
 
 export type ExamRow = {

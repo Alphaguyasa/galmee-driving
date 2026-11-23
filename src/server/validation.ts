@@ -48,6 +48,9 @@ export const PAY_METHODS = ["cash", "telebirr", "cbe_birr", "bank", "other"] as 
 export const DOCUMENT_KINDS = ["id_card", "photo", "medical", "education"] as const;
 export type DocumentKind = (typeof DOCUMENT_KINDS)[number];
 export const LESSON_MARKS = ["attended", "missed", "cancelled"] as const;
+/** Skills an instructor can tick after an attended lesson, in teaching order. Same list as the dr_lesson_skills check. */
+export const SKILLS = ["controls", "mirrors", "steering", "gears", "reversing", "hill_start", "parking", "traffic"] as const;
+export type Skill = (typeof SKILLS)[number];
 export const EXAM_KINDS = ["theory", "practical"] as const;
 
 export const enrollSchema = z.object({
@@ -82,6 +85,8 @@ export const bookLessonSchema = z.object({
 });
 
 export const markLessonSchema = z.object({ lesson: uuid, status: z.enum(LESSON_MARKS) });
+
+export const lessonSkillsSchema = z.object({ lesson: uuid, skills: z.array(z.enum(SKILLS)).max(SKILLS.length) });
 
 export const addExamSchema = z.object({
   enrollment: uuid,

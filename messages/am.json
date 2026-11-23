@@ -84,7 +84,9 @@
     "already_loaded": "የማሳያ ተማሪዎች አስቀድመው ተጭነዋል።",
     "name_taken": "ያ ስም ዝርዝሩ ውስጥ አለ።",
     "plate_taken": "ያ ሰሌዳ ዝርዝሩ ውስጥ አለ።",
-    "overpayment": "ይህ ከቀሪው ይበልጣል።"
+    "overpayment": "ይህ ከቀሪው ይበልጣል።",
+    "lesson_not_attended": "ችሎታ መመረጥ የሚችለው ለተገኘበት ትምህርት ብቻ ነው።",
+    "bad_skill": "ያልታወቀ ችሎታ።"
   },
   "board": {
     "search": "ስም ወይም ስልክ ይፈልጉ",
@@ -179,7 +181,8 @@
     "docReceived": "ደርሷል",
     "docMissing": "አልደረሰም",
     "docMark": "ተቀብያለሁ",
-    "docRemove": "መልስ"
+    "docRemove": "መልስ",
+    "skills": "ችሎታዎች"
   },
   "lessons": {
     "status": {
@@ -247,5 +250,24 @@
     "deactivate": "አስወግድ",
     "activate": "መልስ",
     "inactive": "አገልግሎት ላይ አይደለም"
+  },
+  "skills": {
+    "title": "የታዩ ችሎታዎች",
+    "none": "ገና ምንም አልተመረጠም",
+    "save": "ችሎታዎችን አስቀምጥ",
+    "saved": "ችሎታዎች ተቀምጠዋል",
+    "progress": "ከ{total} ችሎታዎች {done} ታይተዋል",
+    "shown": "ታይቷል",
+    "notYet": "ገና",
+    "name": {
+      "controls": "መቆጣጠሪያዎች",
+      "mirrors": "መስታወቶች",
+      "steering": "መሪ",
+      "gears": "ማርሽ",
+      "reversing": "ወደኋላ መንዳት",
+      "hill_start": "ዳገት ላይ መነሳት",
+      "parking": "ፓርኪንግ",
+      "traffic": "በትራፊክ መንዳት"
+    }
   }
 }

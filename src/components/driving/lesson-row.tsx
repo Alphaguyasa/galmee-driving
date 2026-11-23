@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Car, UserRound } from "lucide-react";
 import { markLessonAction } from "@/actions/driving";
 import { ActionForm } from "@/components/driving/action-form";
+import { SkillPicker } from "@/components/driving/skill-picker";
 import type { Locale } from "@/i18n/config";
 import { addisDay, addisTime } from "@/lib/addis-time";
 import { formatEthiopianDate } from "@/lib/ethiopian-date";
@@ -59,6 +60,7 @@ export async function LessonRow({ lesson, showStudent, showDate, now }: { lesson
           <Mark lesson={lesson.id} enrollment={lesson.enrollment_id} status="cancelled" label={t("cancel")} variant="outline" />
         </div>
       ) : null}
+      {lesson.status === "attended" ? <SkillPicker lesson={lesson.id} enrollment={lesson.enrollment_id} skills={lesson.skills} /> : null}
     </li>
   );
 }

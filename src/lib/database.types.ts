@@ -69,6 +69,12 @@ export type Database = {
         Update: { id?: string; tenant_id?: string; enrollment_id?: string; kind?: string; received_at?: string; received_by?: string|null }
         Relationships: []
       }
+      dr_lesson_skills: {
+        Row: { id: string; tenant_id: string; lesson_id: string; enrollment_id: string; skill: string; created_by: string|null; created_at: string }
+        Insert: { id?: string; tenant_id?: string; lesson_id: string; enrollment_id: string; skill: string; created_by?: string|null; created_at?: string }
+        Update: { id?: string; tenant_id?: string; lesson_id?: string; enrollment_id?: string; skill?: string; created_by?: string|null; created_at?: string }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
@@ -887,6 +893,7 @@ export type Database = {
         Returns: string
       }
       dr_mark_lesson: { Args: { p_lesson: string; p_status: string }; Returns: undefined }
+      dr_set_lesson_skills: { Args: { p_lesson: string; p_skills: string[] }; Returns: string[] }
       dr_add_exam: {
         Args: { p_enrollment: string; p_kind: string; p_exam_on: string; p_place?: string; p_client_ref?: string }
         Returns: string
